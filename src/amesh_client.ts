@@ -1,10 +1,6 @@
-import * as path from "path";
 import * as Jimp from "jimp";
 import * as request from "request";
-import * as moment from "moment";
 import * as _ from "lodash";
-import * as fs from "fs";
-import * as childProcess from "child_process";
 import ImageSize from "./image_size";
 
 class AmeshClient {

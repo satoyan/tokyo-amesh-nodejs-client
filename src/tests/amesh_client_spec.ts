@@ -1,3 +1,4 @@
+// tslint:disable:no-unused-expression
 import * as chai from "chai";
 import "mocha";
 import { AmeshClient, ImageSize } from "../";

@@ -1,6 +1,6 @@
-import  "mocha";
+import "mocha";
 import * as chai from "chai";
-import {AmeshClient, ImageSize  } from "../";
+import { ImageSize } from "../";
 
 describe("ImageSize", () => {
     it("Small should be '000'", () => {
