@@ -109,5 +109,41 @@ describe("AmeshClient", () => {
                 });
             });
         });
+
+        describe("get latest image with infered methIndex", () => {
+            describe("get large image", () => {
+                before(() => {
+                    return AmeshClient.getLatestImage(ImageSize.Large,)
+                        .then((img) => image = img);
+                });
+
+                it("image should not be null nor undefined", () => {
+                    chai.expect(image).not.to.be.null;
+                    chai.expect(image).not.to.be.undefined;
+                });
+
+                it("image size is large", () => {
+                    chai.expect(image.bitmap.width).to.eq(3080);
+                    chai.expect(image.bitmap.height).to.eq(1920);
+                });
+            });
+
+            describe("get small image", () => {
+                before(() => {
+                    return AmeshClient.getLatestImage(ImageSize.Small,)
+                        .then((img) => image = img);
+                });
+
+                it("image should not be null nor undefined", () => {
+                    chai.expect(image).not.to.be.null;
+                    chai.expect(image).not.to.be.undefined;
+                });
+
+                it("image size is large", () => {
+                    chai.expect(image.bitmap.width).to.eq(770);
+                    chai.expect(image.bitmap.height).to.eq(480);
+                });
+            });
+        });
     });
 })
