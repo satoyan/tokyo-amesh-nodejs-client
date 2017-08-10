@@ -10,29 +10,44 @@ $ npm i tokyo_amesh_node_client
 $ cd ./node_modules/tokyo_amesh_node_client && npm run test
 ```
 
-### writing code
+### example (TypeScript)
 ```
-const {
-    ImageSize,
-    AmeshClient
-} = require("tokyo_amesh_node_client");
+import { AmeshClient, ImageSize } from "tokyo_amesh_node_client";
 
+// Most easiest way to get amesh image (as Jimp object).
+AmeshClient.getLatestImage(ImageSize.Small)
+    .then((img) => {
+        console.log("Getting ameh image has been finished.");
+        console.log(`width: ${img.bitmap.width}, height: ${img.bitmap.height}`);
+    });
 
-async function test() {
-    const ac = new AmeshClient();
-    const timeline = await ac.getTimeline();
-    console.log(timeline);
+// You can also download an image as a file.
+const fileName = "amesh.png";
+AmeshClient.downloadLatestImage(ImageSize.Small, fileName)
+    .then((img) => {
+        console.log("Image has been downloaded.");
+    });
 
-    const latest = timeline[0];
+// You can get mesh indecies.
+const ameshClient = new AmeshClient();
+ameshClient.getMeshIndices()
+    .then((indices) => {
+        console.log(indices);
+    });
 
-    // get small image as Jimp object
-    const small = await ac.getImage(ImageSize.Small, latest)
-    console.info(small);
+// You can get mesh indices like this.
+[ '201708101315',
+  '201708101310',
+  '201708101305',
+  '201708101300',
+]
 
-
-    // save as file
-    const dest = `/tmp/amesh_${latest}.png`;
-    await ac.downloadImage(ImageSize.Large, latest, dest);
-}
-
+// You can get an image using specific mesh index.
+ameshClient.getMeshIndices()
+    .then((indices) => {
+        return ameshClient.getImage(ImageSize.Small, indices[0]);
+    })
+    .then((img) => {
+        console.log("Got an image.");
+    });
 ```

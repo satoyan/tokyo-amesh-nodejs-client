@@ -2,3 +2,4 @@ node_modules
 /lib
 src/tests/test.ts
 tokyo_amesh_node_client-0.1.9.tgz
+.vscode/temp.sql
