@@ -16,7 +16,7 @@ describe("AmeshClient", () => {
         let timeline: string[];
 
         beforeEach(() => {
-            return target.getTimeline()
+            return target.getMeshIndices()
                 .then((tl) => timeline = tl);
         });
 
@@ -35,7 +35,7 @@ describe("AmeshClient", () => {
         let image: Jimp;
 
         before(() => {
-            return target.getTimeline().then((tl) => timeline = tl);
+            return target.getMeshIndices().then((tl) => timeline = tl);
         });
 
         describe("get last image", () => {
