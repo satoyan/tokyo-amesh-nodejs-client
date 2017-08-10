@@ -1,6 +1,6 @@
 {
   "name": "tokyo_amesh_node_client",
-  "version": "0.1.9",
+  "version": "0.2.1",
   "description": "",
   "main": "lib/index.js",
   "keywords": [
@@ -8,6 +8,7 @@
     "tokyo",
     "ame"
   ],
+  "typings": "./lib/index.d.ts",
   "directories": {},
   "scripts": {
     "build": "tsc",
