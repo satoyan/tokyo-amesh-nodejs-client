@@ -5,6 +5,7 @@ import ImageSize from "./image_size";
 import * as moment from "moment";
 
 class AmeshClient {
+    static readonly UTC_OFFSET = 540; //JST
     static readonly AMESH_MESH_INDEX_URL = "http://tokyo-ame.jwa.or.jp/scripts/mesh_index.js";
     static readonly AMESH_BASE_URL = "http://tokyo-ame.jwa.or.jp";
 
@@ -50,7 +51,7 @@ class AmeshClient {
      */
     public static getLatestMeshIndexCandidates(max: number = 1): string[] {
         let result: string[] = [];
-        let currentTime = moment();
+        let currentTime = moment().utcOffset(this.UTC_OFFSET);
         while (result.length < max) {
             let i = Math.floor(currentTime.minutes() / this.AMESH_UPDATE_INTERVAL_MINUTE);
             currentTime.minutes(i * this.AMESH_UPDATE_INTERVAL_MINUTE);
@@ -66,6 +67,7 @@ class AmeshClient {
         const c = new AmeshClient();
         for (let i = 0; i < meshIndices.length; i++) {
             try {
+                console.log(`Get ${meshIndices[i]}...`);
                 return await c.getImage(size, meshIndices[i]);
             } catch (ex) {
                 console.error(`Image not found ${meshIndices[i]}`);
@@ -78,8 +80,14 @@ class AmeshClient {
     public static async downloadLatestImage(size: ImageSize, dest: string): Promise<Jimp> {
         if (_.isEmpty(dest)) { throw new Error("dest is empty"); }
         const img = await this.getLatestImage(size);
-        img.write(dest);
-        return img;
+        return new Promise<Jimp>((resolve, reject) => {
+            img.write(dest, (err, image) => {
+                if (!!err) {
+                    reject(err);
+                }
+                resolve(image);
+            });
+        });
     }
 
     public async getMapImage(size: ImageSize): Promise<Jimp> {
@@ -104,18 +112,26 @@ class AmeshClient {
             this.getMeshImage(size, meshIndex)
         ]);
 
-        return _.reduce<Jimp, Jimp>(
+        let result: Jimp = _.reduce<Jimp, Jimp>(
             images.slice(1, images.length),
             (result, img) => {
                 return result.composite(img, 0, 0);
             },
             images[0]);
+
+        return result;
     }
 
-    public async downloadImage(size: ImageSize, meshIndex: string, dest: string): Promise<void> {
+    public async downloadImage(size: ImageSize, meshIndex: string, dest: string): Promise<Jimp> {
         let img = await this.getImage(size, meshIndex);
-        img.write(dest);
-        return;
+        return new Promise<Jimp>((resolve, reject) => {
+            img.write(dest, (err, image) => {
+                if (!!err) {
+                    reject(err);
+                }
+                resolve(image);
+            });
+        });;
     }
 }
 
