@@ -17,7 +17,7 @@ import { AmeshClient, ImageSize } from "tokyo_amesh_node_client";
 // Most easiest way to get amesh image (as Jimp object).
 AmeshClient.getLatestImage(ImageSize.Small)
     .then((img) => {
-        console.log("Getting ameh image has been finished.");
+        console.log("Getting amesh image has been finished.");
         console.log(`width: ${img.bitmap.width}, height: ${img.bitmap.height}`);
     });
 
@@ -35,7 +35,7 @@ ameshClient.getMeshIndices()
         console.log(indices);
     });
 
-// You can get mesh indices like this.
+// Mesh indices looks like below.
 [ '201708101315',
   '201708101310',
   '201708101305',
