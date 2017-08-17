@@ -14,10 +14,10 @@ class AmeshClient {
     static readonly TIME_LINE_FORMAT = "YYYYMMDDHHmm";
     static readonly DEFAULT_COUNT_CANDIDATE = 3;
 
-    private meshIndices : string[] = [];
+    private meshIndices: string[] = [];
 
-    public async getMeshIndices() : Promise < string[] > {
-        return new Promise < string[] > ((resolve, reject) => {
+    public async getMeshIndices(): Promise<string[]> {
+        return new Promise<string[]>((resolve, reject) => {
             if (!_.isEmpty(this.meshIndices)) {
                 resolve(this.meshIndices);
             }
@@ -32,9 +32,9 @@ class AmeshClient {
                 }
 
                 try {
-                    let body : string = res.body;
+                    let body: string = res.body;
                     // Main part of contents are array of 'YYYYMMDDHHmm'
-                    this.meshIndices = body.match(/\d{12}/g)as RegExpMatchArray;
+                    this.meshIndices = body.match(/\d{12}/g) as RegExpMatchArray;
                     resolve(this.meshIndices || []);
                 } catch (ex) {
                     reject(new Error(`Failed to get meshIndices(${ex.messsage}).`));
@@ -49,8 +49,8 @@ class AmeshClient {
      * @example Current datetime is 2017/05/30 13:06, max is 3, then result will be
      * ["201705301305", "201705301300", "201705301255"]
      */
-    public static getLatestMeshIndexCandidates(max : number = 1) : string[] {
-        let result : string[] = [];
+    public static getLatestMeshIndexCandidates(max: number = 1): string[] {
+        let result: string[] = [];
         let currentTime = moment().utcOffset(this.UTC_OFFSET);
         while (result.length < max) {
             let i = Math.floor(currentTime.minutes() / this.AMESH_UPDATE_INTERVAL_MINUTE);
@@ -61,7 +61,7 @@ class AmeshClient {
         return result;
     }
 
-    public static async getLatestImage(size : ImageSize) : Promise < Jimp > {
+    public static async getLatestImage(size: ImageSize): Promise<Jimp> {
         const meshIndices = this.getLatestMeshIndexCandidates(this.DEFAULT_COUNT_CANDIDATE);
 
         const c = new AmeshClient();
@@ -78,12 +78,12 @@ class AmeshClient {
         throw new Error("Image not found");
     }
 
-    public static async downloadLatestImage(size : ImageSize, dest : string) : Promise < Jimp > {
-        if(_.isEmpty(dest)) {
+    public static async downloadLatestImage(size: ImageSize, dest: string): Promise<Jimp> {
+        if (_.isEmpty(dest)) {
             throw new Error("dest is empty");
         }
         const img = await this.getLatestImage(size);
-        return new Promise < Jimp > ((resolve, reject) => {
+        return new Promise<Jimp>((resolve, reject) => {
             img.write(dest, (err, image) => {
                 if (!!err) {
                     reject(err);
@@ -93,45 +93,46 @@ class AmeshClient {
         });
     }
 
-    public async getMapImage(size : ImageSize) : Promise < Jimp > {
+    public async getMapImage(size: ImageSize): Promise<Jimp> {
         let url = `${AmeshClient.AMESH_BASE_URL}/map/map${size}.jpg`;
         return Jimp.read(url);
     }
 
-    public async getMaskImage(size : ImageSize) : Promise < Jimp > {
+    public async getMaskImage(size: ImageSize): Promise<Jimp> {
         let url = `${AmeshClient.AMESH_BASE_URL}/map/msk${size}.png`;
         return Jimp.read(url);
     }
 
-    public async getMeshImage(size : ImageSize, meshIndex : string) : Promise < Jimp > {
+    public async getMeshImage(size: ImageSize, meshIndex: string): Promise<Jimp> {
         let url = `${AmeshClient.AMESH_BASE_URL}/mesh/${size}/${meshIndex}.gif`;
         return Jimp.read(url);
     }
 
-    public async getImage(size : ImageSize, meshIndex : string) : Promise < Jimp > {
+    public async getImage(size: ImageSize, meshIndex: string): Promise<Jimp> {
         let images = await Promise.all([
             this.getMapImage(size),
             this.getMeshImage(size, meshIndex),
-            this.getMaskImage(size)
+            this.getMaskImage(size),
+            this.createTimestampImage(meshIndex)
         ]);
 
-        let result: Jimp = _.reduce < Jimp,
-            Jimp > (images.slice(1, images.length), (result, img) => {
+        let result: Jimp = _.reduce<Jimp,
+            Jimp>(images.slice(1, images.length), (result, img) => {
                 return result.composite(img, 0, 0);
             }, images[0]);
 
-        await this.insertTimeStampText(result, meshIndex);
         return result;
     }
 
-    public async insertTimeStampText(img : Jimp, meshIndex : string) : Promise < Jimp > {
+    public async createTimestampImage(meshIndex: string): Promise<Jimp> {
+        let bg: Jimp = new (Jimp as any)(300, 55, 0x3355ffff);
         let s = AmeshClient.meshIndexToMoment(meshIndex).format("YYYY-MM-DD HH:mm");
-        let font: any = await(Jimp as any).loadFont(Jimp.FONT_SANS_32_BLACK);
-        (img as any).print(font, 10, 0, s);
-        return img;
+        let font: any = await (Jimp as any).loadFont(Jimp.FONT_SANS_32_WHITE);
+        (bg as any).print(font, 10, 10, s);
+        return bg;
     }
 
-    public static meshIndexToMoment(meshIndex : string) : moment.Moment {
+    public static meshIndexToMoment(meshIndex: string): moment.Moment {
         const m = meshIndex.match(/(\d{4})(\d{2})(\d{2})(\d{2})(\d{2})/);
         if (!m) {
             throw new Error("Faild to extract meshIndex to expression of dateTime");
@@ -140,9 +141,9 @@ class AmeshClient {
         return moment(Date.parse(d));
     }
 
-    public async downloadImage(size : ImageSize, meshIndex : string, dest : string) : Promise < Jimp > {
+    public async downloadImage(size: ImageSize, meshIndex: string, dest: string): Promise<Jimp> {
         let img = await this.getImage(size, meshIndex);
-        return new Promise < Jimp > ((resolve, reject) => {
+        return new Promise<Jimp>((resolve, reject) => {
             img.write(dest, (err, image) => {
                 if (!!err) {
                     reject(err);
