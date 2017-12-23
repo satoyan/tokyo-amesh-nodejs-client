@@ -1,5 +1,5 @@
 node_modules
-/lib
+/dist
 src/tests/test.ts
 *.tgz
 .vscode/temp.sql

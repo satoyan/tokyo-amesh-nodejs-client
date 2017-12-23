@@ -14,7 +14,7 @@ $ cd ./node_modules/tokyo_amesh_node_client && npm run test
 ```
 import { AmeshClient, ImageSize } from "tokyo_amesh_node_client";
 
-// Most easiest way to get amesh image (as Jimp object).
+// The easiest way to get amesh image (as Jimp object).
 AmeshClient.getLatestImage(ImageSize.Small)
     .then((img) => {
         console.log("Getting amesh image has been finished.");
