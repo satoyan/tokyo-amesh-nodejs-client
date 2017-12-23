@@ -1,5 +1,5 @@
-import ImageSize from "./image_size";
-import AmeshClient from "./amesh_client";
+import ImageSize from "./lib/image_size";
+import AmeshClient from "./lib/amesh_client";
 
 export {
     ImageSize,
