@@ -5,9 +5,6 @@
 ### install
 ```
 $ npm i tokyo_amesh_node_client
-
-# run test
-$ cd ./node_modules/tokyo_amesh_node_client && npm run test
 ```
 
 ### example (TypeScript)
