@@ -1,6 +1,6 @@
 {
   "name": "tokyo_amesh_node_client",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "description": "",
   "main": "dist/index.js",
   "keywords": [
