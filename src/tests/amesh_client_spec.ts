@@ -21,7 +21,7 @@ describe("AmeshClient", () => {
         });
 
         it("timeline should not be null or undefined", () => {
-            chai.expect(timeline).not.to.be.null;
+            chai.expect(timeline).to.be.null;
             chai.expect(timeline).not.to.be.undefined;
         });
 
