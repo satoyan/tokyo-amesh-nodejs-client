@@ -14,6 +14,8 @@ class AmeshClient {
     static readonly TIME_LINE_FORMAT = "YYYYMMDDHHmm";
     static readonly DEFAULT_COUNT_CANDIDATE = 3;
 
+    hello = "world";
+
     private meshIndices: string[] = [];
 
     public async getMeshIndices(): Promise<string[]> {
