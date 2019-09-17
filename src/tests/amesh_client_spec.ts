@@ -51,7 +51,7 @@ describe("AmeshClient", () => {
                 });
 
                 it("image size is large", () => {
-                    chai.expect(image.bitmap.width).to.eq(3080);
+                    chai.expect(image.bitmap.width).to.eq(30801);
                     chai.expect(image.bitmap.height).to.eq(1920);
                 });
             });
