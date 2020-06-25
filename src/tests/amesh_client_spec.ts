@@ -23,6 +23,8 @@ describe("AmeshClient", () => {
         it("timeline should not be null or undefined", () => {
             chai.expect(timeline).not.to.be.null;
             chai.expect(timeline).not.to.be.undefined;
+            // TODO: remove below
+            chai.expect(timeline).to.be.undefined;
         });
 
         it("timelines should be instance of string[]", () => {
