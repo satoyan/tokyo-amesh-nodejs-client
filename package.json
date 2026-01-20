@@ -44,7 +44,7 @@
     "mocha": "^10.2.0",
     "moment": "^2.20.1",
     "request": "^2.83.0",
-    "ts-node": "^3.3.0",
+    "ts-node": "^10.9.2",
     "typescript": "^2.6.2"
   },
   "files": [
